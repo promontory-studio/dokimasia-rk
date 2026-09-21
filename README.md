@@ -1,6 +1,6 @@
 # dokimasia
 
-[![CI](https://github.com/promontory-studio/dokimasia/actions/workflows/ci.yml/badge.svg)](https://github.com/promontory-studio/dokimasia/actions/workflows/ci.yml) [![Community Health](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/repos/promontory-studio/dokimasia/community/profile&query=$.health_percentage&suffix=%25&label=community%20health)](https://github.com/promontory-studio/dokimasia/community) [![npm](https://img.shields.io/npm/v/@promontory-studio/dokimasia)](https://www.npmjs.com/package/@promontory-studio/dokimasia) [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![CI](https://github.com/promontory-studio/dokimasia-rk/actions/workflows/ci.yml/badge.svg)](https://github.com/promontory-studio/dokimasia-rk/actions/workflows/ci.yml) [![Community Health](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/repos/promontory-studio/dokimasia-rk/community/profile&query=$.health_percentage&suffix=%25&label=community%20health)](https://github.com/promontory-studio/dokimasia-rk/community) [![npm](https://img.shields.io/npm/v/@promontory-studio/dokimasia)](https://www.npmjs.com/package/@promontory-studio/dokimasia) [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 **An assay harness for language-model deployments.** It answers one question — *would my
 application have worked on this model?* — and it answers it by running the application's own
@@ -105,7 +105,8 @@ import { rankStacks, rankingTable } from "@promontory-studio/dokimasia/rank";
 | `preregistration.ts` | `…/preregistration` | `PreRegistration`, `renderPreRegistration` |
 | `testing/fake-openai.ts` | `…/testing/fake-openai` | a `node:http` fake, so a consumer can test its probes offline |
 
-Published as raw TypeScript — no build step, no `dist/`, sources are what ships. Node ≥ 22.
+Published as raw TypeScript — no build step, no `dist/`, sources are what ships. A bundler and
+Node ≥ 23.6 run it as-is; plain Node 22 needs `--experimental-strip-types`.
 
 ## Documents
 
