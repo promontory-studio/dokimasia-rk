@@ -1,6 +1,6 @@
 {
   "name": "@promontory-studio/dokimasia",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "description": "Assay a model against your own validators: feature x model scored by the function that decides in production whether a response is usable.",
   "keywords": [
