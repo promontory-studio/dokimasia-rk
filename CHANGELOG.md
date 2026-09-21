@@ -5,6 +5,19 @@ All notable changes to this package are documented here. This project adheres to
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-09-21
+
+The first version offered to npm. The patch tags between `0.1.1` and this one were cut by CI while
+`package.json` still carried `"private": true`, so none of them reached the registry; everything
+below arrives here at once.
+
+### Added
+
+- `measured()` and `MeasuredScore` — the type guard and the narrowed score a ranker needs, so an
+  unmeasured feature cannot be averaged by accident.
+- `publishConfig.access: public`, and the README now says what shipping raw `.ts` costs a plain
+  Node 22 consumer (`--experimental-strip-types`; a bundler and Node >= 23.6 need nothing).
+
 ### Changed
 
 - **`summarize` reports an unrun feature as unmeasured, not as a zero.** `passRate`,
@@ -27,6 +40,15 @@ All notable changes to this package are documented here. This project adheres to
   on.
 - **The tie marker names its partners** (`2=a,c`) instead of a bare `=`. Interval overlap is not
   transitive, so a chain of tied pairs was printing as one undifferentiated tied group.
+- Every `github.com` URL in the package and its documents names `dokimasia-rk`, the repository's
+  real slug. npm renders `repository.url` and provenance binds the artifact to its source repo, so
+  a redirect-only URL is a claim that does not verify cleanly.
+
+## [0.1.2] — 2026-09-21
+
+### Fixed
+
+- CI verifies the lockfile, and the release job no longer leaves a modified one behind.
 
 ## [0.1.1] — 2026-09-21
 
@@ -66,6 +88,8 @@ written and used against a real deployment decision; nothing here was designed i
 - Full documentation set: `README`, `ARCHITECTURE`, `METHOD`, `RANKING`, `CONTRIBUTING`, `SECURITY`,
   `CODE_OF_CONDUCT`.
 
-[Unreleased]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.1.2...v0.2.0
+[0.1.2]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/promontory-studio/dokimasia-rk/releases/tag/v0.1.0
