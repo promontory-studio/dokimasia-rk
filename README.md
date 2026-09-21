@@ -1,6 +1,6 @@
 # dokimasia
 
-[![CI](https://github.com/promontory-studio/dokimasia/actions/workflows/ci.yml/badge.svg)](https://github.com/promontory-studio/dokimasia/actions/workflows/ci.yml) [![Community Health](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/repos/promontory-studio/dokimasia/community/profile&query=$.health_percentage&suffix=%25&label=community%20health)](https://github.com/promontory-studio/dokimasia/community) [![npm](https://img.shields.io/npm/v/@promontory-studio/dokimasia)](https://www.npmjs.com/package/@promontory-studio/dokimasia) [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![CI](https://github.com/promontory-studio/dokimasia-rk/actions/workflows/ci.yml/badge.svg)](https://github.com/promontory-studio/dokimasia-rk/actions/workflows/ci.yml) [![Community Health](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/repos/promontory-studio/dokimasia/community/profile&query=$.health_percentage&suffix=%25&label=community%20health)](https://github.com/promontory-studio/dokimasia-rk/community) [![npm](https://img.shields.io/npm/v/@promontory-studio/dokimasia)](https://www.npmjs.com/package/@promontory-studio/dokimasia) [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 **An assay harness for language-model deployments.** It answers one question — *would my
 application have worked on this model?* — and it answers it by running the application's own
@@ -13,6 +13,8 @@ no client and reads no key. The host supplies both.
 ```
 npm install @promontory-studio/dokimasia
 ```
+
+The repository is `dokimasia-rk`; the package is `@promontory-studio/dokimasia` — the slug carries a disambiguating suffix, the name does not.
 
 ## Why it deserves to exist
 
