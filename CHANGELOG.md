@@ -21,6 +21,12 @@ All notable changes to this package are documented here. This project adheres to
   at 0%, with a spurious `n≈∞` tie note, which `RANKING.md` explicitly calls incorrect output.
 - A feature present in `scores` with `n` of 0 no longer counts as common ground between two stacks;
   it is reported in `unmeasured`, where it belongs.
+- **`weakest` is chosen from the features the score was computed over, and ordered on the interval's
+  lower bound.** It was picked from every score the stack had, ordered on the point estimate — so the
+  column could name a feature the ranking deliberately excluded, using a number rule 1 does not rank
+  on.
+- **The tie marker names its partners** (`2=a,c`) instead of a bare `=`. Interval overlap is not
+  transitive, so a chain of tied pairs was printing as one undifferentiated tied group.
 
 ## [0.1.1] — 2026-09-21
 

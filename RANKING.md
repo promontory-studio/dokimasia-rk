@@ -63,13 +63,15 @@ who knows which of the two they are buying.
 
 ## 5. Overlapping intervals are a tie, and the tie says what would break it
 
-Two stacks whose intervals overlap are reported in `ties` as an unordered pair, marked `=` in the
-table, and the note says what `n` per feature would separate them at the observed rates
-(`separatingN`). When the rates are identical it says `n≈∞`, which is the honest answer.
+Two stacks whose intervals overlap are reported in `ties` as an unordered pair, marked in the table
+as `=` followed by the partners that row is tied with (`2=a,c`), and the note says what `n` per
+feature would separate them at the observed rates (`separatingN`). When the rates are identical it
+says `n≈∞`, which is the honest answer.
 
 Ties are pairs, not groups. Interval overlap is not transitive — A can overlap B and B overlap C
 while A and C separate cleanly — so reporting connected components would overstate what is
-indistinguishable.
+indistinguishable. Naming each row's partners is what keeps the table from doing that: a bare `=`
+on all three rows of such a chain reads as a three-way tie.
 
 ## 6. Weights are declared before the run, and the default is a declared choice
 
@@ -92,7 +94,7 @@ weighting that produced it.
 | `unsupported` | Declared incapable. Absence by capability. |
 | `unmeasured` | Not run. Absence by omission. |
 | `medianMs` | Weighted median latency across the comparable set. Context, not score. |
-| `weakest` | The lowest-passing feature with a real rejection example — what to fix first. |
+| `weakest` | The comparable feature with the lowest lower bound that has a rejection example — what to fix first. Over the ranked set alone, ordered like rule 1. |
 
 ## What this does not do
 

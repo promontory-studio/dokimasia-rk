@@ -121,6 +121,55 @@ describe("rule 2 — coverage is not quality", () => {
   });
 });
 
+describe("the verdict describes one set of features, and the tie marker describes pairs", () => {
+  // `score` is the mean over the comparable set. A `weakest` drawn from outside it names a feature
+  // that contributed nothing to the number it is printed beside.
+  it("names the weakest of the features the score was actually computed over", () => {
+    const r = rankStacks(
+      [
+        { stack: "a", scores: [scoreOf("ranges", 8, 12), scoreOf("extract", 1, 12)] },
+        { stack: "b", scores: [scoreOf("ranges", 9, 12)] },
+      ],
+      { features: ["ranges", "extract"] },
+    );
+    expect(r.comparable).toEqual(["ranges"]);
+    expect(r.ranked.find((v) => v.stack === "a")?.weakest?.feature).toBe("ranges");
+  });
+
+  // 3/4 scores .750 on the point estimate and .301 on the lower bound; 7/10 scores .700 and .397.
+  // The two disagree about which is weaker, and rule 1 says the lower bound decides.
+  it("picks the weakest on the interval's lower bound, not the point estimate", () => {
+    const entry = (stack: string) => ({
+      stack,
+      scores: [scoreOf("ranges", 3, 4), scoreOf("extract", 7, 10)],
+    });
+    const r = rankStacks([entry("a"), entry("b")], { features: ["ranges", "extract"] });
+    expect(r.ranked[0]?.weakest?.feature).toBe("ranges");
+  });
+
+  // RANKING.md: "Ties are pairs, not groups. Interval overlap is not transitive." At n = 12,
+  // 6/12 overlaps 1/12 and 1/12 overlaps 0/12, but 6/12 does not overlap 0/12 — so a bare `=` on
+  // all three rows reads as a three-way tie that the data does not support.
+  it("does not let a chain of tied pairs read as one tied group", () => {
+    const r = rankStacks(
+      [
+        { stack: "a", scores: [scoreOf("ranges", 6, 12)] },
+        { stack: "b", scores: [scoreOf("ranges", 1, 12)] },
+        { stack: "c", scores: [scoreOf("ranges", 0, 12)] },
+      ],
+      { features: ["ranges"] },
+    );
+    expect(r.ties).toEqual([
+      ["a", "b"],
+      ["b", "c"],
+    ]);
+    const rows = rankingTable(r).split("\n").filter((l) => /^\| \d/.test(l));
+    expect(rows[0]).toMatch(/^\| 1=b \| a \|/);
+    expect(rows[1]).toMatch(/^\| 2=a,c \| b \|/);
+    expect(rows[2]).toMatch(/^\| 3=b \| c \|/);
+  });
+});
+
 describe("rule 3 — an unmeasured feature is unmeasured, never zero", () => {
   it("separates a feature nobody ran from a feature the stack declared it cannot serve", () => {
     const r = rankStacks(

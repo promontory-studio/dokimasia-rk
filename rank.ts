@@ -73,10 +73,12 @@ function verdict(entry: StackEntry, features: string[], comparable: string[], we
   const unmeasured = features.filter((f) => !unsupported.includes(f) && !byFeature.has(f));
   const scored = comparable.map((f) => byFeature.get(f)).filter((s): s is MeasuredScore => s !== undefined);
 
-  const weakest = entry.scores
-    .filter(measured)
+  // Drawn from `scored`, not from every score the stack has: the column sits beside a mean taken
+  // over the comparable set alone, and a weakest from outside it names a feature that contributed
+  // nothing to the number. Ordered on the lower bound, because rule 1 orders on the lower bound.
+  const weakest = scored
     .filter((s) => s.rejections.length > 0)
-    .sort((a, b) => a.passRate - b.passRate)[0];
+    .sort((a, b) => a.ci[0] - b.ci[0])[0];
 
   return {
     stack: entry.stack,
@@ -147,7 +149,12 @@ export function rankStacks(entries: StackEntry[], opts: { features: string[]; we
 export function rankingTable(r: Ranking): string {
   const pct = (v: number) => `${(v * 100).toFixed(0)}%`;
   const rows = r.ranked.map((v, i) => {
-    const place = r.ties.some(([a, b]) => a === v.stack || b === v.stack) ? `${i + 1}=` : `${i + 1}`;
+    // The partners are named, not just marked. Overlap is not transitive (RANKING.md:70), so a bare
+    // `=` on a tying b and b tying c reads as a three-way tie that the intervals do not support.
+    const partners = r.ranked
+      .filter((o) => r.ties.some(([a, b]) => (a === v.stack && b === o.stack) || (b === v.stack && a === o.stack)))
+      .map((o) => o.stack);
+    const place = partners.length ? `${i + 1}=${partners.join(",")}` : `${i + 1}`;
     const gaps = [
       v.unsupported.length ? `${v.unsupported.length} unsupported` : "",
       v.unmeasured.length ? `${v.unmeasured.length} unmeasured` : "",
