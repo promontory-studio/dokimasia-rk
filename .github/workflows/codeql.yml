@@ -11,6 +11,10 @@ on:
 jobs:
   analyze:
     name: Analyze
+    # Code scanning is not available on a private repo without Advanced Security, and is free once
+    # the repo is public. Gating on visibility turns this green at the flip instead of leaving a
+    # permanently red check that everyone learns to ignore.
+    if: github.event.repository.visibility == 'public'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
