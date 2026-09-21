@@ -5,7 +5,7 @@
 export type { MessagesClient, MessagesStream } from "./client.ts";
 export { censored, runProbe, runProbeCase, type AnyProbe, type OnRejected, type Probe, type ProbeOutcome } from "./probe.ts";
 export { bucketRejection, withDefaults, DEFAULT_BUCKETS, type BucketTable } from "./buckets.ts";
-export { summarize, type FeatureScore } from "./score.ts";
+export { measured, summarize, type FeatureScore, type MeasuredScore } from "./score.ts";
 export { budget, totalCalls, type Budget } from "./budget.ts";
 export { minimumDetectableWins, signTest, successRate, wilson, withReplicates } from "./stats.ts";
 export { rankStacks, rankingTable, separatingN, type Ranking, type StackEntry, type StackVerdict, type StackWeights } from "./rank.ts";

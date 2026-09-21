@@ -4,7 +4,7 @@
 // Every rule below exists because the obvious implementation is dishonest at the n a paid run can
 // afford. RANKING.md states them in prose; this file is where each one is enforced, and tests/
 // rank.test.ts is where each one is red if it is removed.
-import type { FeatureScore } from "./score.ts";
+import { measured, type FeatureScore, type MeasuredScore } from "./score.ts";
 import { wilson } from "./stats.ts";
 
 export type StackWeights = Record<string, number>;
@@ -47,9 +47,12 @@ export interface Ranking {
 
 const weightOf = (feature: string, weights?: StackWeights): number => weights?.[feature] ?? 1;
 
+// Deliberately has no empty case. A mean of nothing is not zero, and returning zero here is what
+// once printed two 12/12 stacks as a 0% tie underneath the note saying nothing was ranked.
 function mean(values: [number, number][]): number {
   const total = values.reduce((s, [, w]) => s + w, 0);
-  return total === 0 ? 0 : values.reduce((s, [v, w]) => s + v * w, 0) / total;
+  if (total === 0) throw new Error("mean of no measurements — an unmeasured feature is not a zero");
+  return values.reduce((s, [v, w]) => s + v * w, 0) / total;
 }
 
 /** The smallest n at which two proportions this far apart would stop overlapping — what it would
@@ -65,12 +68,13 @@ export function separatingN(a: number, b: number, limit = 10_000): number {
 }
 
 function verdict(entry: StackEntry, features: string[], comparable: string[], weights?: StackWeights): StackVerdict {
-  const byFeature = new Map(entry.scores.map((s) => [s.feature, s]));
+  const byFeature = new Map(entry.scores.filter(measured).map((s) => [s.feature, s]));
   const unsupported = features.filter((f) => entry.unsupported?.includes(f));
   const unmeasured = features.filter((f) => !unsupported.includes(f) && !byFeature.has(f));
-  const scored = comparable.map((f) => byFeature.get(f)).filter((s): s is FeatureScore => s !== undefined);
+  const scored = comparable.map((f) => byFeature.get(f)).filter((s): s is MeasuredScore => s !== undefined);
 
   const weakest = entry.scores
+    .filter(measured)
     .filter((s) => s.rejections.length > 0)
     .sort((a, b) => a.passRate - b.passRate)[0];
 
@@ -99,10 +103,15 @@ function verdict(entry: StackEntry, features: string[], comparable: string[], we
  */
 export function rankStacks(entries: StackEntry[], opts: { features: string[]; weights?: StackWeights }): Ranking {
   const { features, weights } = opts;
-  const scoredIn = (e: StackEntry) => new Set(e.scores.map((s) => s.feature));
+  // A feature present in `scores` but with n = 0 was never run, so it is not common ground.
+  const scoredIn = (e: StackEntry) => new Set(e.scores.filter(measured).map((s) => s.feature));
   const comparable = features.filter((f) => entries.every((e) => scoredIn(e).has(f)));
 
-  const ranked = entries.map((e) => verdict(e, features, comparable, weights)).sort((a, b) => b.score - a.score);
+  // Nothing comparable means nothing to rank, and RANKING.md is explicit that an order would not be
+  // correct output here. The note carries the whole answer; no verdict is constructed at all.
+  const ranked = comparable.length
+    ? entries.map((e) => verdict(e, features, comparable, weights)).sort((a, b) => b.score - a.score)
+    : [];
 
   const ties: [string, string][] = [];
   for (let i = 0; i < ranked.length; i++) {

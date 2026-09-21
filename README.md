@@ -98,7 +98,7 @@ import { rankStacks, rankingTable } from "@promontory-studio/dokimasia/rank";
 | `probe.ts` | `@promontory-studio/dokimasia` | `Probe<C>`, `AnyProbe`, `ProbeOutcome`, `runProbe`, `runProbeCase`, `censored` |
 | `client.ts` | `…/client` | `MessagesClient`, `MessagesStream` — a structural port, not a dependency |
 | `buckets.ts` | `…/buckets` | `DEFAULT_BUCKETS`, `bucketRejection`, `withDefaults` |
-| `score.ts` | `…/score` | `FeatureScore`, `summarize` |
+| `score.ts` | `…/score` | `FeatureScore`, `summarize`, `measured`, `MeasuredScore` |
 | `budget.ts` | `…/budget` | `budget`, `totalCalls` |
 | `stats.ts` | `…/stats` | `wilson`, `successRate`, `signTest`, `minimumDetectableWins`, `withReplicates` |
 | `rank.ts` | `…/rank` | `rankStacks`, `rankingTable`, `separatingN`, `StackVerdict` |
