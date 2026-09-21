@@ -5,6 +5,14 @@ All notable changes to this package are documented here. This project adheres to
 
 ## [Unreleased]
 
+## [0.1.1] — 2026-09-21
+
+### Changed
+
+- Both `github/codeql-action` pins moved to the current `v4.38.1` commit. Dependabot proposed only
+  `analyze`; pinning the pair to different commits of one action is the failure mode that makes a
+  SHA pin worthless, so they move together.
+
 ## [0.1.0] — 2026-09-21
 
 First release. The harness was extracted from a clinical-reasoning package, where it had been
@@ -35,5 +43,6 @@ written and used against a real deployment decision; nothing here was designed i
 - Full documentation set: `README`, `ARCHITECTURE`, `METHOD`, `RANKING`, `CONTRIBUTING`, `SECURITY`,
   `CODE_OF_CONDUCT`.
 
-[Unreleased]: https://github.com/promontory-studio/dokimasia/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/promontory-studio/dokimasia/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/promontory-studio/dokimasia/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/promontory-studio/dokimasia/releases/tag/v0.1.0
