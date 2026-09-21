@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm run check
+      - run: npm test
+
+  release:
+    needs: test
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      id-token: write
+    concurrency:
+      group: release-main
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_PAT }}
+          persist-credentials: true
+      # npm's OIDC publishing needs CLI >= 11.5.1, which Node 22 does not bundle.
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      - name: Bump past any version whose tag already exists
+        id: bump
+        run: |
+          IFS='.' read -r major minor patch <<< "$(node -p "require('./package.json').version")"
+          # A tag left behind by a release that failed after tagging would make `git tag` below fail
+          # on every run after it, wedging releases permanently. Skip past it instead.
+          patch=$((patch + 1))
+          while git rev-parse -q --verify "refs/tags/v$major.$minor.$patch" >/dev/null; do
+            patch=$((patch + 1))
+          done
+          new_version="$major.$minor.$patch"
+          npm version "$new_version" --no-git-tag-version
+          echo "version=$new_version" >> "$GITHUB_OUTPUT"
+          echo "private=$(node -p "require('./package.json').private === true")" >> "$GITHUB_OUTPUT"
+      - name: Commit, tag, push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json
+          git commit -m "chore(release): v${{ steps.bump.outputs.version }} [skip ci]"
+          git tag "v${{ steps.bump.outputs.version }}"
+          git push origin HEAD:main
+          git push origin "v${{ steps.bump.outputs.version }}"
+      # Gated on the flag rather than deleted, so publishing turns on with the single deliberate
+      # commit that lifts `"private"` — and until then this job is green rather than permanently red.
+      - name: Publish to npm
+        if: steps.bump.outputs.private != 'true'
+        run: npm publish --provenance --access public
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "v${{ steps.bump.outputs.version }}" --generate-notes

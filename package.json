@@ -1,0 +1,62 @@
+{
+  "name": "@promontory-studio/dokimasia",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Assay a model against your own validators: feature x model scored by the function that decides in production whether a response is usable.",
+  "keywords": [
+    "evaluation",
+    "benchmark",
+    "llm",
+    "model-selection",
+    "anthropic",
+    "openai-compatible",
+    "wilson-interval",
+    "pre-registration"
+  ],
+  "license": "MIT",
+  "author": "Promontory Studio",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/promontory-studio/dokimasia.git"
+  },
+  "homepage": "https://github.com/promontory-studio/dokimasia#readme",
+  "bugs": "https://github.com/promontory-studio/dokimasia/issues",
+  "type": "module",
+  "main": "index.ts",
+  "types": "index.ts",
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "*.ts",
+    "testing/**/*.ts",
+    "!tests",
+    "!*.test.ts"
+  ],
+  "exports": {
+    ".": "./index.ts",
+    "./client": "./client.ts",
+    "./probe": "./probe.ts",
+    "./buckets": "./buckets.ts",
+    "./score": "./score.ts",
+    "./budget": "./budget.ts",
+    "./stats": "./stats.ts",
+    "./rank": "./rank.ts",
+    "./preregistration": "./preregistration.ts",
+    "./testing/fake-openai": "./testing/fake-openai.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@anthropic-ai/sdk": ">=0.30"
+  },
+  "devDependencies": {
+    "@anthropic-ai/sdk": "^0.69.0",
+    "@types/node": "^22.20.4",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}
