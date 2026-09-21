@@ -1,7 +1,7 @@
 // One test per rule in RANKING.md. Each of these is red if its rule is removed from rank.ts — that
 // is the point of writing them: the obvious implementation of a ranker passes none of them.
 import { describe, expect, it } from "vitest";
-import { rankStacks, separatingN } from "../rank.ts";
+import { rankingTable, rankStacks, separatingN } from "../rank.ts";
 import { summarize } from "../score.ts";
 import type { ProbeOutcome } from "../probe.ts";
 import type { FeatureScore } from "../score.ts";
@@ -62,6 +62,9 @@ describe("rule 2 — coverage is not quality", () => {
     expect(r.ranked[0]).toMatchObject({ covered: 1, total: 2, unsupported: ["extract"] });
   });
 
+  // RANKING.md: "That is the correct output; an order would not be." The note alone is not enough —
+  // both stacks below went 12/12, and an earlier implementation printed them as a 0% tie underneath
+  // the very note that says nothing is ranked.
   it("ranks nothing, and says so, when no feature was scored on every stack", () => {
     const r = rankStacks(
       [
@@ -72,6 +75,49 @@ describe("rule 2 — coverage is not quality", () => {
     );
     expect(r.comparable).toEqual([]);
     expect(r.note).toContain("NOTHING IS RANKED");
+    expect(r.ranked).toEqual([]);
+    expect(r.ties).toEqual([]);
+  });
+
+  it("prints no row, and invents no percentage, when nothing is comparable", () => {
+    const r = rankStacks(
+      [
+        { stack: "a", scores: [scoreOf("ranges", 12, 12)] },
+        { stack: "b", scores: [scoreOf("extract", 12, 12)] },
+      ],
+      { features: ["ranges", "extract"] },
+    );
+    const table = rankingTable(r);
+    expect(table).toContain("NOTHING IS RANKED");
+    expect(table).not.toMatch(/^\| \d/m);
+    expect(table).not.toContain("0%");
+  });
+
+  it("does not call two unmeasured stacks a tie that more n would break", () => {
+    const r = rankStacks(
+      [
+        { stack: "a", scores: [scoreOf("ranges", 12, 12)] },
+        { stack: "b", scores: [scoreOf("extract", 12, 12)] },
+      ],
+      { features: ["ranges", "extract"] },
+    );
+    expect(r.note).not.toContain("separate");
+    expect(r.note).not.toContain("n\u2248");
+  });
+
+  // A feature present in `scores` but with n = 0 was never run, so it cannot make two stacks
+  // comparable — otherwise a pair of empty runs ranks as a 0% tie.
+  it("treats a scored-but-never-run feature as unmeasured, not as common ground", () => {
+    const r = rankStacks(
+      [
+        { stack: "a", scores: [scoreOf("ranges", 12, 12), summarize([], { feature: "extract", attempts: 4 })] },
+        { stack: "b", scores: [scoreOf("extract", 12, 12), summarize([], { feature: "ranges", attempts: 4 })] },
+      ],
+      { features: ["ranges", "extract"] },
+    );
+    expect(r.comparable).toEqual([]);
+    expect(r.ranked).toEqual([]);
+    expect(r.ranked.map((v) => v.unmeasured)).toEqual([]);
   });
 });
 

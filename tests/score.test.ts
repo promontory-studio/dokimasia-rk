@@ -33,11 +33,18 @@ describe("summarize", () => {
     expect(s.meanAttempts).toBeCloseTo(3);
   });
 
-  it("gives an empty run a full [0, 1] interval rather than a confident zero", () => {
+  // METHOD.md: zero is reserved for a feature that was asked and FAILED. A run that made no calls
+  // asked nothing, so every rate-shaped field is absent rather than zero — and the interval stays
+  // the full [0, 1], which is what knowing nothing looks like.
+  it("reports an empty run as unmeasured, not as a zero", () => {
     const s = summarize([], probe);
-    expect(s.passRate).toBe(0);
+    expect(s.n).toBe(0);
+    expect(s.passed).toBe(0);
+    expect(s.passRate).toBeNull();
+    expect(s.firstAttemptPassRate).toBeNull();
+    expect(s.meanAttempts).toBeNull();
+    expect(s.medianMs).toBeNull();
     expect(s.ci).toEqual([0, 1]);
-    expect(s.meanAttempts).toBe(5);
   });
 
   it("keeps a clean sweep's interval below 1 instead of claiming certainty", () => {

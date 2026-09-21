@@ -5,6 +5,23 @@ All notable changes to this package are documented here. This project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- **`summarize` reports an unrun feature as unmeasured, not as a zero.** `passRate`,
+  `firstAttemptPassRate`, `meanAttempts` and `medianMs` are now `number | null`, and are `null` when
+  `n` is 0; `ci` stays the full `[0, 1]`. `METHOD.md` reserves zero for a feature that was asked and
+  failed, and the old zeros were being averaged into stack scores as if they were measurements.
+  Read a score through the new `measured()` type guard, or widen to `number | null`.
+
+### Fixed
+
+- **`rankStacks` no longer prints an order underneath `NOTHING IS RANKED`.** With no feature scored
+  on every stack it returns `ranked: []` and `ties: []`, and `rankingTable` prints the note with no
+  rows — previously two stacks that each went 12/12 on different features came back ranked `1=`/`2=`
+  at 0%, with a spurious `n≈∞` tie note, which `RANKING.md` explicitly calls incorrect output.
+- A feature present in `scores` with `n` of 0 no longer counts as common ground between two stacks;
+  it is reported in `unmeasured`, where it belongs.
+
 ## [0.1.1] — 2026-09-21
 
 ### Changed
