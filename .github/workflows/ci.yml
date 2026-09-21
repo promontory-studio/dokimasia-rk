@@ -41,18 +41,18 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
-      - name: Bump past any version whose tag already exists
+      # package.json is the source of the version, so CHANGELOG.md can name the version it describes.
+      # The patch only advances when that version is already tagged — which also steps over a tag
+      # left behind by a release that failed after tagging, instead of wedging every later run.
+      - name: Resolve the version to release
         id: bump
         run: |
           IFS='.' read -r major minor patch <<< "$(node -p "require('./package.json').version")"
-          # A tag left behind by a release that failed after tagging would make `git tag` below fail
-          # on every run after it, wedging releases permanently. Skip past it instead.
-          patch=$((patch + 1))
           while git rev-parse -q --verify "refs/tags/v$major.$minor.$patch" >/dev/null; do
             patch=$((patch + 1))
           done
           new_version="$major.$minor.$patch"
-          npm version "$new_version" --no-git-tag-version
+          npm version "$new_version" --no-git-tag-version --allow-same-version
           echo "version=$new_version" >> "$GITHUB_OUTPUT"
           echo "private=$(node -p "require('./package.json').private === true")" >> "$GITHUB_OUTPUT"
       - name: Commit, tag, push
@@ -60,7 +60,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add package.json
-          git commit -m "chore(release): v${{ steps.bump.outputs.version }} [skip ci]"
+          git diff --cached --quiet || git commit -m "chore(release): v${{ steps.bump.outputs.version }} [skip ci]"
           git tag "v${{ steps.bump.outputs.version }}"
           git push origin HEAD:main
           git push origin "v${{ steps.bump.outputs.version }}"
