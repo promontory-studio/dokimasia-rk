@@ -66,6 +66,6 @@ written and used against a real deployment decision; nothing here was designed i
 - Full documentation set: `README`, `ARCHITECTURE`, `METHOD`, `RANKING`, `CONTRIBUTING`, `SECURITY`,
   `CODE_OF_CONDUCT`.
 
-[Unreleased]: https://github.com/promontory-studio/dokimasia/compare/v0.1.1...HEAD
-[0.1.1]: https://github.com/promontory-studio/dokimasia/compare/v0.1.0...v0.1.1
-[0.1.0]: https://github.com/promontory-studio/dokimasia/releases/tag/v0.1.0
+[Unreleased]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/promontory-studio/dokimasia-rk/releases/tag/v0.1.0

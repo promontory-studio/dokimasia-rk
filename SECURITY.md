@@ -26,7 +26,7 @@ anyone's `inference.config.json`.
 
 ## Reporting a vulnerability
 
-Please use GitHub's [private vulnerability reporting](https://github.com/promontory-studio/dokimasia/security/advisories/new)
+Please use GitHub's [private vulnerability reporting](https://github.com/promontory-studio/dokimasia-rk/security/advisories/new)
 rather than opening a public issue. Include the version and a minimal reproduction.
 
 There is no bug bounty. We aim to acknowledge reports within 5 business days.
