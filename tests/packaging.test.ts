@@ -51,12 +51,10 @@ describe("runs with no key and no network", () => {
     expect(pkg.dependencies ?? {}).toEqual({});
   });
 
-  it("makes every peer optional, so installing this package installs nothing", () => {
-    // The SDK is reached by `import type` only — the test below pins that — so a consumer of the
-    // arithmetic alone must not be made to install an HTTP client to get `wilson`.
-    for (const name of Object.keys(pkg.peerDependencies ?? {})) {
-      expect(pkg.peerDependenciesMeta?.[name]?.optional, `${name} is a mandatory peer`).toBe(true);
-    }
+  it("declares no peer either, so installing this package installs nothing", () => {
+    // Not even an optional one. The port in client.ts is declared outright rather than derived from a
+    // vendor's types, so there is no package a consumer of `wilson` could be asked to bring.
+    expect(pkg.peerDependencies ?? {}).toEqual({});
   });
 
   it("constructs no client and reads no credential anywhere in the sources", () => {
@@ -68,12 +66,13 @@ describe("runs with no key and no network", () => {
     }
   });
 
-  it("imports the SDK for types only, so nothing is reachable at runtime", () => {
+  it("names no vendor SDK in a published source at all, not even as a type import", () => {
+    // This replaced an `import type` check. That check could only ever fire while the import existed,
+    // so once the port stopped being derived from a vendor it would have passed over an empty loop —
+    // and a test that cannot fail is the thing CONTRIBUTING.md forbids. The stronger claim can.
     for (const s of sources) {
       const body = readFileSync(join(ROOT, s), "utf8");
-      for (const line of body.split("\n").filter(isCode)) {
-        if (line.includes("@anthropic-ai/sdk")) expect(line, `${s}: ${line}`).toMatch(/^import type /);
-      }
+      expect(body, `${s} names a vendor SDK`).not.toMatch(/@anthropic-ai\/sdk|@openai\/|from "openai"/);
     }
   });
 

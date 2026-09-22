@@ -7,8 +7,7 @@
 // Nothing here is a fixture for this package's tests. It is the shape a consumer writes: the
 // validator is the oracle, the probe is a closure over the shipped call, and the harness never
 // learns what an invoice is.
-import type Anthropic from "@anthropic-ai/sdk";
-import type { MessagesClient } from "../client.ts";
+import type { MessagesClient, ModelReply } from "../client.ts";
 import { withDefaults } from "../buckets.ts";
 import { runProbe, type OnRejected, type Probe } from "../probe.ts";
 import { summarize, type FeatureScore } from "../score.ts";
@@ -124,11 +123,11 @@ function scriptedClient(script: Script, cases: string[]): MessagesClient {
           type: "message",
           role: "assistant",
           model: String(body.model),
-          content: [{ type: "text", text: next, citations: null }],
+          content: [{ type: "text", text: next }],
           stop_reason: "end_turn",
           stop_sequence: null,
           usage: { input_tokens: 0, output_tokens: 0 },
-        } as Anthropic.Message;
+        } as ModelReply;
       },
       stream: () => {
         throw new Error("this example does not stream");

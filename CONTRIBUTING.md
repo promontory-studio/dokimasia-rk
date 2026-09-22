@@ -9,8 +9,8 @@ npm run check     # tsc --noEmit
 ```
 
 **The suite needs no network and no credentials.** This package constructs no client and reads no
-key; the SDK import is type-only, so nothing from it is reachable from a test that does not pass a
-client in. Probe runs are exercised against the fake server this package ships
+key, and no source file names a vendor SDK at all — the client shape is declared in `client.ts`, so
+there is nothing to reach. Probe runs are exercised against the fake server this package ships
 (`testing/fake-openai.ts`) or against scripted in-memory clients. If a test needs network access or
 a secret to pass, that is a bug in the test, not a missing setup step —
 `tests/packaging.test.ts` asserts it.

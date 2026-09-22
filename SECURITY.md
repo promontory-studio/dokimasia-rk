@@ -6,10 +6,10 @@ Only the latest published version of `@promontory-studio/dokimasia` is supported
 
 ## Scope
 
-This package has no runtime dependencies, constructs no client, reads no environment variable and
-makes no network call of its own. The SDK import is type-only. A report about a leaked key or
-credential is therefore almost certainly about the host application that supplied the client, not
-about this repo.
+This package has no runtime dependencies and no peers, constructs no client, reads no environment
+variable and makes no network call of its own. No published source file names a vendor SDK. A report
+about a leaked key or credential is therefore almost certainly about the host application that
+supplied the client, not about this repo.
 
 In scope here:
 
