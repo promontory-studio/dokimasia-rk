@@ -5,9 +5,16 @@ All notable changes to this package are documented here. This project adheres to
 
 ## [Unreleased]
 
-**The first version that reaches npm.** `"private": true` is lifted, so the release job's publish
-step stops skipping. No API change — the code being published is the code `0.2.0` and `0.2.1`
-already described; only the gate moved.
+## [0.2.3] — 2026-09-22
+
+**The first version that reaches npm.** `"private": true` is lifted, so the publish stops being
+skipped. No API change — the code being published is the code `0.2.0` and `0.2.1` already
+described; only the gate moved.
+
+`0.2.1` and `0.2.2` were tagged but never published: the first while the package was still
+private, the second when the release job reached `npm publish` with no credential configured
+(`ENEEDAUTH`). This one is published from a maintainer's machine to create the package under the
+org, so it carries no provenance attestation. Releases after it go through CI and do.
 
 ### Added
 
@@ -120,7 +127,8 @@ written and used against a real deployment decision; nothing here was designed i
 - Full documentation set: `README`, `ARCHITECTURE`, `METHOD`, `RANKING`, `CONTRIBUTING`, `SECURITY`,
   `CODE_OF_CONDUCT`.
 
-[Unreleased]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.3...HEAD
+[0.2.3]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.2...v0.2.3
 [0.2.0]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.1.0...v0.1.1
