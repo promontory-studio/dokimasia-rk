@@ -2,7 +2,17 @@
 //
 // The pieces a host needs in one import; every module is also reachable on its own subpath, which
 // is how a domain package takes the probe types without taking the ranker.
-export type { MessagesClient, MessagesStream } from "./client.ts";
+export type {
+  MessagesClient,
+  MessagesStream,
+  ModelReply,
+  ModelRequest,
+  ModelUsage,
+  OtherReplyBlock,
+  ReplyBlock,
+  StreamEvent,
+  TextReplyBlock,
+} from "./client.ts";
 export { censored, runProbe, runProbeCase, type AnyProbe, type OnRejected, type Probe, type ProbeOutcome } from "./probe.ts";
 export { bucketRejection, withDefaults, DEFAULT_BUCKETS, type BucketTable } from "./buckets.ts";
 export { measured, summarize, type FeatureScore, type MeasuredScore } from "./score.ts";
