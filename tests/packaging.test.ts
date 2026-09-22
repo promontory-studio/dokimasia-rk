@@ -9,6 +9,8 @@ const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {
   files: string[];
   exports: Record<string, string>;
   dependencies?: Record<string, string>;
+  peerDependencies?: Record<string, string>;
+  peerDependenciesMeta?: Record<string, { optional?: boolean }>;
 };
 
 /** Comments say what the code means; only the code says what it does. */
@@ -47,6 +49,14 @@ describe("what ships", () => {
 describe("runs with no key and no network", () => {
   it("has no runtime dependencies at all", () => {
     expect(pkg.dependencies ?? {}).toEqual({});
+  });
+
+  it("makes every peer optional, so installing this package installs nothing", () => {
+    // The SDK is reached by `import type` only — the test below pins that — so a consumer of the
+    // arithmetic alone must not be made to install an HTTP client to get `wilson`.
+    for (const name of Object.keys(pkg.peerDependencies ?? {})) {
+      expect(pkg.peerDependenciesMeta?.[name]?.optional, `${name} is a mandatory peer`).toBe(true);
+    }
   });
 
   it("constructs no client and reads no credential anywhere in the sources", () => {
