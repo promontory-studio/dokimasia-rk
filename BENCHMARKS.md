@@ -214,9 +214,10 @@ Stated so that absence is read as absence rather than as a pass.
 - **No model has ever been run through this package.** Every number here is arithmetic over
   generated outcomes. The claim that a probe over a real provider reports what a deployer needs is
   untested *in this repo*; it was tested in the code this package was extracted from.
-- **No consumer has migrated to it.** `akesi-pil` still runs its own copy of `runProbe`,
-  `summarize` and `wilson`. Until it imports this package instead, "domain-free" is a property of
-  the code rather than a demonstration — see the README.
+- **Only one consumer, and it is this package's own origin.** `akesi-pil` has migrated onto it and
+  runs no copy of `runProbe`, `summarize` or `wilson` any more. A second domain — one this code was
+  never shaped by — has not adopted it, so "domain-free" rests on one migration rather than on a
+  pattern. See the README.
 - **Nothing about latency.** `medianMs` is carried and printed and never scored; no row here tests
   that it is measured correctly under concurrency, because `runProbe` is serial and there is no
   concurrency to test.

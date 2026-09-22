@@ -5,6 +5,23 @@ All notable changes to this package are documented here. This project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- **`@anthropic-ai/sdk` is an optional peer, so installing this package installs nothing.** It was a
+  mandatory peer, which put an HTTP client and three transitive packages into the tree of a consumer
+  that only wanted `wilson` — while the README called the package dependency-free. The import is
+  `import type` and always was (`tests/packaging.test.ts` has pinned that since `0.1.0`), so nothing
+  was ever reachable at runtime; only the declaration was wrong. A consumer that type-checks the
+  `client` or `probe` subpath still needs the SDK's types, and necessarily has them, because it has
+  to hold a client to make a call. A new packaging test requires every peer to be optional.
+
+### Changed
+
+- `README.md` and `BENCHMARKS.md` record that `akesi-pil` has migrated onto this package and no
+  longer carries its own `runProbe`, `summarize` or `wilson`. Both documents said no consumer had.
+  The limit is restated rather than dropped: one migration, and of the domain this code was
+  extracted from, is not evidence that a domain it was never shaped by would fit.
+
 ## [0.2.5] — 2026-09-22
 
 ### Added

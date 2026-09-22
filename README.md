@@ -55,6 +55,10 @@ both.
 npm install @promontory-studio/dokimasia
 ```
 
+That install pulls in nothing. `@anthropic-ai/sdk` is an *optional* peer, reached by `import type`
+only, so it is needed just to type-check the `client` and `probe` subpaths — and a consumer of those
+is holding an SDK instance already. Taking `wilson` should not cost you an HTTP client.
+
 ## Not an eval framework
 
 The comparison set is promptfoo, Inspect, braintrust, Langfuse and lm-eval-harness. Pitched as "an
@@ -74,10 +78,13 @@ there is no oracle, and without an oracle there is nothing here but arithmetic.
 
 ## What this does not claim
 
-- **Nothing consumes it yet.** It was extracted from `akesi-pil`'s benchmark suite, which still
-  carries its own copies of `runProbe`, `summarize` and `wilson` and has not been migrated. Until a
-  domain imports this package instead, "domain-free" is a property of the code and of its own tests
-  — not a demonstration that a second domain can adopt it. The seam it turns on is stated in
+- **One domain consumes it, and it is the domain this was extracted from.**
+  [`akesi-pil`](https://github.com/pablo-tech/pilos/tree/main/akesi-pil) now imports the probe loop,
+  the bucketing and the statistics it used to carry in duplicate, and keeps only the five probes its
+  own `validate()` judges. That is the seam holding under a real migration — nothing had to move the
+  other way — but it is not evidence that a domain this package was never shaped by would fit. Until
+  a second one adopts it, "domain-free" is a property of the code, its own tests and one migration.
+  The seam it turns on is stated in
   [`ARCHITECTURE.md` § *Probes live with validators*](ARCHITECTURE.md#2-probes-live-with-validators-not-with-the-harness).
 - **At the `n` a paid run affords — one to twelve cases per feature — many comparisons are genuinely
   not separable.** This is why [`rankStacks`](RANKING.md) reports ties as ties and says what `n`
