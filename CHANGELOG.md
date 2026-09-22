@@ -5,6 +5,33 @@ All notable changes to this package are documented here. This project adheres to
 
 ## [Unreleased]
 
+Documentation and dev-only files. No API change, nothing added to the published package.
+
+### Added
+
+- `START-HERE.md` — two ways in, three minutes with no code or ten minutes running it, including
+  breaking the censoring invariant on purpose and watching the named test go red.
+- `BENCHMARKS.md` — five rows measuring this package's own arithmetic against known true rates,
+  each naming the correct-but-different implementation it discriminates against. Two of the five
+  come out against the package and are published unchanged.
+- `benchmarks/arithmetic-corpus.ts` — the seeded offline corpus those rows come from, with
+  `tests/benchmarks.test.ts` pinning that it reproduces from its seed and that its loops had
+  something to iterate.
+- `examples/offline-probe.ts` — a whole assay over a scripted client: a shipped extraction path,
+  its own validator as the oracle, two features across two stacks, no key and no network.
+
+### Changed
+
+- `README.md` restructured: the problem before the definition, the quickstart moved out to
+  `START-HERE.md`, and `## Why it deserves to exist` replaced by `## Not an eval framework`.
+- `README.md` no longer offers `startFakeOpenAI` as a probe's `client`. The fake is an HTTP
+  endpoint speaking OpenAI's chat-completions API; a probe's `client` is anything matching
+  `MessagesClient`, which in a test is a scripted in-memory object.
+- `README.md` no longer claims a domain consumer. There are none yet — `akesi-pil` still runs its
+  own copies of the extracted code.
+- `tsconfig.json` type-checks `examples/` and `benchmarks/`, so `npm run check` covers the code the
+  docs tell people to run.
+
 ## [0.2.0] — 2026-09-21
 
 The first version offered to npm. The patch tags between `0.1.1` and this one were cut by CI while

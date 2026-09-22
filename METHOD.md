@@ -10,6 +10,10 @@ Every measured figure goes on one page in the consuming repo — with the date, 
 configuration it came from — and nowhere else. A number repeated in a README, a slide and a
 changelog is three numbers as soon as one of them is updated.
 
+This repo's own arithmetic obeys the same rule against itself: the rows that can be settled offline
+with no model live on [`BENCHMARKS.md`](BENCHMARKS.md) and nowhere else, so a consuming page and
+this one cannot drift into contradicting each other.
+
 **A result that came back flat or negative is published unchanged.** A ledger that only records
 wins is not evidence of anything. This is the rule that costs something, and it is the reason the
 rest of the page is worth reading.

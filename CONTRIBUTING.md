@@ -17,6 +17,11 @@ a secret to pass, that is a bug in the test, not a missing setup step —
 
 Node ≥ 22. No build step: raw TypeScript is what ships, so what you edit is what a consumer runs.
 
+Two runnable things sit outside the published package and need no key either. `node
+examples/offline-probe.ts` is a whole assay over a scripted client, and `node
+benchmarks/arithmetic-corpus.ts` regenerates every figure on [`BENCHMARKS.md`](BENCHMARKS.md) from
+its seed. Both need Node ≥ 23.6, or `--experimental-strip-types` on Node 22.
+
 ## Anti-vacuity — a test must be able to fail
 
 A test that passes whether or not the property holds is not a test. This is the rule most easily
