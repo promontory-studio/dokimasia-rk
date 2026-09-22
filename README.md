@@ -55,9 +55,11 @@ both.
 npm install @promontory-studio/dokimasia
 ```
 
-That install pulls in nothing. `@anthropic-ai/sdk` is an *optional* peer, reached by `import type`
-only, so it is needed just to type-check the `client` and `probe` subpaths — and a consumer of those
-is holding an SDK instance already. Taking `wilson` should not cost you an HTTP client.
+That install pulls in nothing, because there is nothing to pull: no dependencies, and no peers
+either, not even optional ones. The client shape a probe is handed is *declared* in
+[`client.ts`](client.ts), not derived from a vendor's package, so type-checking any subpath of this
+one costs nothing. The only file here that names a vendor is a type-level test that never ships, and
+its job is to fail the build if the declared port and the real SDK ever drift apart.
 
 ## Not an eval framework
 
@@ -112,7 +114,7 @@ worth reading.
 | Module | Import | Holds |
 |---|---|---|
 | `probe.ts` | `@promontory-studio/dokimasia` | `Probe<C>`, `AnyProbe`, `ProbeOutcome`, `runProbe`, `runProbeCase`, `censored` |
-| `client.ts` | `…/client` | `MessagesClient`, `MessagesStream` — a structural port, not a dependency |
+| `client.ts` | `…/client` | `MessagesClient`, `MessagesStream`, `ModelRequest`, `ModelReply`, `ReplyBlock` — a structural port, declared here, not imported from anyone |
 | `buckets.ts` | `…/buckets` | `DEFAULT_BUCKETS`, `bucketRejection`, `withDefaults` |
 | `score.ts` | `…/score` | `FeatureScore`, `summarize`, `measured`, `MeasuredScore` |
 | `budget.ts` | `…/budget` | `budget`, `totalCalls` |

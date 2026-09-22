@@ -3,7 +3,41 @@
 All notable changes to this package are documented here. This project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.0] — 2026-09-22
+
+### Changed
+
+- **The `MessagesClient` port is declared outright instead of derived from `@anthropic-ai/sdk`.** The
+  package's headline claim is that it names no vendor; until now it could not state its own port types
+  without one, which made the claim true of the runtime and false of the build. `0.2.6` made that peer
+  *optional* and fixed only the install graph. `client.ts` now declares the shape itself and names
+  nothing, and `peerDependencies` is gone entirely — there is no package a consumer of `wilson` can be
+  asked to bring.
+
+  The port states only what a **caller** reads, because the harness reads nothing: `probe.ts` hands
+  the client to the shipped call and never touches a field. New exported types accompany the two that
+  already existed (`MessagesClient`, `MessagesStream`): `ModelReply`, `ModelRequest`, `ModelUsage`,
+  `ReplyBlock`, `TextReplyBlock`, `OtherReplyBlock`, `StreamEvent`.
+
+  **A real SDK client is still assignable** — that is the compatibility this change turns on, and it
+  is proven rather than asserted. What does break is code that named an SDK type *through* this
+  package, e.g. a function annotated `(m: Anthropic.Message)` fed from `create()`: the reply type is
+  now `ModelReply`, which declares `content`, `stop_reason` and `usage` and not `id`, `role` or
+  `model`. Hence a MINOR rather than a patch.
+
+### Added
+
+- `tests/client-port.test-d.ts` — what replaces the deleted import as the safety net. It assigns a
+  real `Anthropic` instance to `MessagesClient`, an adapter that is not the SDK to the same type, and
+  reads a reply through both narrowing shapes a consumer writes; seven `@ts-expect-error` cases pin
+  that a client which is *not* this port is rejected. Type-level only, enforced by `npm run check`,
+  and never published — which is how the SDK stays a devDependency of one test file instead of a
+  dependency of the package.
+- `tests/packaging.test.ts` asserts that no published source names a vendor SDK at all, and that
+  `peerDependencies` is empty. Both replace assertions that would have passed over an empty loop once
+  the import was gone.
+
+## [0.2.6] — 2026-09-22
 
 ### Fixed
 
@@ -168,7 +202,9 @@ written and used against a real deployment decision; nothing here was designed i
 - Full documentation set: `README`, `ARCHITECTURE`, `METHOD`, `RANKING`, `CONTRIBUTING`, `SECURITY`,
   `CODE_OF_CONDUCT`.
 
-[Unreleased]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.5...HEAD
+[Unreleased]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.6...v0.3.0
+[0.2.6]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.5...v0.2.6
 [0.2.5]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.2...v0.2.3

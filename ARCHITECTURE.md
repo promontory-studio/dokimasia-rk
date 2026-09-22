@@ -19,8 +19,9 @@ duplication and are not.
 - The **host** decides *what to measure* — which configuration, which features, which fixtures —
   and supplies the client. It is the only layer that reads a key or touches the network.
 - **This package** decides *how a measurement is made and reported*. It constructs no client, reads
-  no environment variable, names no vendor, and has no runtime dependencies. All four are asserted
-  in `tests/packaging.test.ts`, so they are facts rather than intentions.
+  no environment variable, names no vendor — not in a source file and not in a dependency of any
+  kind — and has no runtime dependencies. All four are asserted in `tests/packaging.test.ts`, so
+  they are facts rather than intentions.
 - The **domain package** decides *what counts as a pass*, because it is the thing that decides that
   in production.
 
@@ -52,17 +53,24 @@ shape in its production code declares its own. That is two declarations of one s
 a DRY violation.
 
 DRY forbids two copies of **one fact we own**. This is not that. Both declarations are independent
-structural ports onto the same **external** contract — the SDK's `messages.create` /
-`messages.stream` — which both packages type-import and neither owns. Structural typing makes them
-mutually assignable at zero coupling, and a change in the SDK breaks both identically, at compile
-time, with no coordination.
+statements of the same **external** contract — the Messages request and reply shape — which neither
+package owns and, since `0.3.0`, neither package imports. Structural typing makes them mutually
+assignable at zero coupling, and a change in the contract breaks both identically, at compile time,
+with no coordination.
 
 The alternative is worse layering in one direction or the other: either a domain package's
 *production* client type depends on a benchmark harness, or this package depends on that domain.
 Both are real couplings. Two structural ports are not.
 
-The SDK import is `import type` everywhere, so nothing from it is reachable at runtime — also
-asserted in `tests/packaging.test.ts`.
+**What a hand-declared port costs, and what pays for it.** Deriving the port from
+`@anthropic-ai/sdk`'s types — which is how it was written until `0.3.0` — made a package whose
+headline claim is that it names no vendor unable to state its own types without one. Declaring it
+outright removes that, and takes on a new risk in exchange: a declaration can drift from the contract
+it restates, silently. `tests/client-port.test-d.ts` is the premium on that risk. It assigns a real
+SDK client to `MessagesClient` and reads a reply through it, so `npm run check` goes red the day the
+two stop fitting — and the SDK is a devDependency of that one test, never a dependency of anything
+published. Only what a caller *reads* is declared; the harness reads nothing, and everything unread
+is left open, so a provider-specific field passes through untouched.
 
 ## 4. Load-bearing invariants
 
