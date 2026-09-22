@@ -1,10 +1,8 @@
 {
   "name": "@promontory-studio/dokimasia",
   "version": "0.2.1",
-  "private": true,
-  "description": "Assay a model against your own validators: feature x model scored by the function that decides in production whether a response is usable.",
+  "description": "Brings no notion of a correct answer and wants none: a probe asks whether your own validator would have accepted the response, counts the attempts the shipped retry loop really spent, and reports a tie when two configurations cannot be separated.",
   "keywords": [
-    "evaluation",
     "benchmark",
     "llm",
     "model-selection",

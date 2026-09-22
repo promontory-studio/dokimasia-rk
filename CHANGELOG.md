@@ -5,7 +5,9 @@ All notable changes to this package are documented here. This project adheres to
 
 ## [Unreleased]
 
-Documentation and dev-only files. No API change, nothing added to the published package.
+**The first version that reaches npm.** `"private": true` is lifted, so the release job's publish
+step stops skipping. No API change — the code being published is the code `0.2.0` and `0.2.1`
+already described; only the gate moved.
 
 ### Added
 
@@ -31,6 +33,9 @@ Documentation and dev-only files. No API change, nothing added to the published 
   own copies of the extracted code.
 - `tsconfig.json` type-checks `examples/` and `benchmarks/`, so `npm run check` covers the code the
   docs tell people to run.
+- `package.json`'s `description` now matches the repository's own, and the `evaluation` keyword is
+  dropped — the README has a section called *Not an eval framework*, and the registry page should
+  not say otherwise.
 
 ## [0.2.0] — 2026-09-21
 
