@@ -15,7 +15,9 @@ client in. Probe runs are exercised against the fake server this package ships
 a secret to pass, that is a bug in the test, not a missing setup step —
 `tests/packaging.test.ts` asserts it.
 
-Node ≥ 22. No build step: raw TypeScript is what ships, so what you edit is what a consumer runs.
+Node ≥ 22. No build step: raw TypeScript is what ships, so what you edit is what a consumer compiles
+— and, for the same reason, not what plain `node` can import from `node_modules`, which the
+[README](README.md#what-is-in-the-box) states in full.
 
 Two runnable things sit outside the published package and need no key either. `node
 examples/offline-probe.ts` is a whole assay over a scripted client, and `node

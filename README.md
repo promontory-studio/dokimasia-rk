@@ -120,8 +120,12 @@ reply you queued. [`examples/offline-probe.ts`](examples/offline-probe.ts) is on
 lines. The fake server is a different tool for a different seam: it is an HTTP endpoint, so it is
 what a consumer points its *own* OpenAI-shaped client at.
 
-Published as raw TypeScript — no build step, no `dist/`, sources are what ships. A bundler and
-Node ≥ 23.6 run it as-is; plain Node 22 needs `--experimental-strip-types`.
+Published as raw TypeScript — no build step, no `dist/`, sources are what ships. The cost is
+specific, and worth knowing before you install: **plain `node` cannot import it.** Node refuses to
+strip types for anything under `node_modules`, at every version and behind every flag, so a bare
+`import` gets `ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING` rather than a module. A bundler, `tsx`,
+or any TypeScript toolchain reads it as-is — those are what this package supports, verified against
+the published tarball rather than against a working copy.
 
 ## Documents
 

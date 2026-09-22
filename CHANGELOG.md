@@ -5,6 +5,21 @@ All notable changes to this package are documented here. This project adheres to
 
 ## [Unreleased]
 
+## [0.2.4] — 2026-09-22
+
+### Fixed
+
+- **`README.md` no longer claims plain Node can import this package.** It said a bundler and Node
+  ≥ 23.6 run the shipped TypeScript as-is. Node refuses to strip types for anything under
+  `node_modules` at every version and behind every flag, so an `import` from a plain-Node consumer
+  raises `ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING`. Caught by installing `0.2.3` from the
+  registry and importing it, which is the only check that could have caught it — the claim holds
+  inside the repository and fails only once the files sit in `node_modules`. A bundler, `tsx` and
+  `tsc` were each run against the published tarball and do work; the README now names those three
+  and nothing else.
+- `CONTRIBUTING.md` carried the same implication in shorter form ("what you edit is what a consumer
+  runs") and now points at the README section instead of restating it.
+
 ## [0.2.3] — 2026-09-22
 
 **The first version that reaches npm.** `"private": true` is lifted, so the publish stops being
@@ -127,7 +142,8 @@ written and used against a real deployment decision; nothing here was designed i
 - Full documentation set: `README`, `ARCHITECTURE`, `METHOD`, `RANKING`, `CONTRIBUTING`, `SECURITY`,
   `CODE_OF_CONDUCT`.
 
-[Unreleased]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.3...HEAD
+[Unreleased]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.4...HEAD
+[0.2.4]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.2...v0.2.3
 [0.2.0]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.1.1...v0.1.2
