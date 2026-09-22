@@ -5,6 +5,8 @@ All notable changes to this package are documented here. This project adheres to
 
 ## [Unreleased]
 
+## [0.2.5] — 2026-09-22
+
 ### Added
 
 - CI publishes, then installs what it published from the registry and consumes it with `tsc`, `tsx`
@@ -149,7 +151,8 @@ written and used against a real deployment decision; nothing here was designed i
 - Full documentation set: `README`, `ARCHITECTURE`, `METHOD`, `RANKING`, `CONTRIBUTING`, `SECURITY`,
   `CODE_OF_CONDUCT`.
 
-[Unreleased]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.4...HEAD
+[Unreleased]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.5...HEAD
+[0.2.5]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.2.2...v0.2.3
 [0.2.0]: https://github.com/promontory-studio/dokimasia-rk/compare/v0.1.2...v0.2.0
