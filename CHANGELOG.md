@@ -5,6 +5,13 @@ All notable changes to this package are documented here. This project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- CI publishes, then installs what it published from the registry and consumes it with `tsc`, `tsx`
+  and a bundler — and asserts plain `node` still cannot, for the documented reason. The `0.2.4` bug
+  was invisible to every check that runs before publishing: the claim held inside the checkout and
+  failed only once the files sat in `node_modules`.
+
 ## [0.2.4] — 2026-09-22
 
 ### Fixed

@@ -33,6 +33,9 @@ jobs:
     concurrency:
       group: release-main
       cancel-in-progress: false
+    outputs:
+      version: ${{ steps.bump.outputs.version }}
+      private: ${{ steps.bump.outputs.private }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -75,3 +78,70 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "v${{ steps.bump.outputs.version }}" --generate-notes
+
+  # The one bug class nothing before this point can catch: a claim that holds inside the checkout
+  # and fails once the files sit in node_modules. The only way to run it is against the registry,
+  # which means this job can only ever go red after a bad version is already public.
+  smoke:
+    needs: release
+    if: needs.release.outputs.private != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+      # The read replica lags the publish by minutes on a package this small.
+      - name: Install the version just published
+        working-directory: ${{ runner.temp }}
+        run: |
+          npm init -y > /dev/null
+          # Must be ESM, or plain node fails on module syntax before it ever reaches node_modules
+          # and the last step would pass for the wrong reason.
+          npm pkg set type=module
+          version="${{ needs.release.outputs.version }}"
+          for _ in $(seq 30); do
+            npm install "@promontory-studio/dokimasia@$version" && exit 0
+            sleep 20
+          done
+          echo "::error::@promontory-studio/dokimasia@$version never appeared on the registry"
+          exit 1
+      - name: Write a consumer
+        working-directory: ${{ runner.temp }}
+        run: |
+          cat > use.ts <<'TS'
+          import { wilson } from "@promontory-studio/dokimasia/stats";
+          const ci: [number, number] = wilson(11, 12);
+          if (!(ci[0] > 0.64 && ci[0] < 0.65)) throw new Error(`unexpected lower bound ${ci[0]}`);
+          console.log("consumed:", ci);
+          TS
+      - name: A TypeScript toolchain type-checks it
+        working-directory: ${{ runner.temp }}
+        run: |
+          npm install --no-save typescript
+          npx tsc --noEmit --module nodenext --moduleResolution nodenext --target es2022 --strict use.ts
+      - name: tsx runs it
+        working-directory: ${{ runner.temp }}
+        run: |
+          npm install --no-save tsx
+          npx tsx use.ts
+      - name: A bundler bundles it
+        working-directory: ${{ runner.temp }}
+        run: |
+          npm install --no-save esbuild
+          npx esbuild use.ts --bundle --platform=node --format=esm --outfile=bundled.mjs
+          node bundled.mjs
+      # README says plain node cannot import it. If Node ever lifts the node_modules restriction
+      # this goes red on purpose — the README would then be wrong in the other direction.
+      - name: Plain node still cannot import it
+        working-directory: ${{ runner.temp }}
+        run: |
+          if node use.ts 2> node-err.txt; then
+            echo "::error::plain node imported the package; the README says it cannot"
+            exit 1
+          fi
+          grep -q ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING node-err.txt || {
+            cat node-err.txt
+            echo "::error::plain node failed, but not for the reason the README documents"
+            exit 1
+          }
