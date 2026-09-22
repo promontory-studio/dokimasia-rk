@@ -1,6 +1,6 @@
 {
   "name": "@promontory-studio/dokimasia",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Brings no notion of a correct answer and wants none: a probe asks whether your own validator would have accepted the response, counts the attempts the shipped retry loop really spent, and reports a tie when two configurations cannot be separated.",
   "keywords": [
     "benchmark",
