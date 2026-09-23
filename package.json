@@ -52,7 +52,7 @@
     "check": "tsc --noEmit"
   },
   "devDependencies": {
-    "@anthropic-ai/sdk": "^0.126.0",
+    "@anthropic-ai/sdk": "^0.127.0",
     "@types/node": "^26.6.2",
     "typescript": "~7.0.2",
     "vitest": "^5.0.1"
