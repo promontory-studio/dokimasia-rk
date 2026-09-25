@@ -2,10 +2,10 @@
 # Thin shim: the shared size/agent-memory/credentials guards live in plover-context, never copied here.
 # Opt in with `git config core.hooksPath .githooks`; external contributors are unaffected.
 # Which checkout of the hub this shim loads is the one thing it decides, because that choice precedes
-# reading anything from it — a derivation inside guards.sh cannot pick the guards.sh that runs. ~/.claude
-# can never hold main (a standing worktree does, and git allows one worktree per branch), so its guards
-# are frozen at whatever branch the last session left it on; naming it here kept every commit on a stale
-# chain. Ask git which worktree holds main — a single-tree clone has none and resolves to itself.
+# reading anything from it — a derivation inside guards.sh cannot pick the guards.sh that runs. So it asks
+# git which worktree holds main rather than trusting ~/.claude outright: that checkout does hold main
+# (since 2026-09-25) and normally answers itself, but a hub parked on a branch froze every repo's chain
+# at whatever policy that branch carried. A single-tree clone has no worktree on main, and resolves to itself.
 HUB="${PLOVER_CONTEXT_DIR:-$HOME/.claude}"
 live=""
 if [ -z "${PLOVER_GIT_HOOKS:-}" ]; then
